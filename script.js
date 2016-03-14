@@ -117,6 +117,7 @@ class Application extends React.Component {
 
   componentWillMount(){//or componentDidMount
     $.getJSON('http://ip-api.com/json', function(location){
+      console.log(location)
       this.setState({location: location})
     }.bind(this))
   }
