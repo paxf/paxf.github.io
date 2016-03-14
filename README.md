@@ -1,6 +1,6 @@
 # paxf.github.io
 ```
-fb.com/paxf
+http://fb.com/paxf
 ```
 ## Weather App
 
