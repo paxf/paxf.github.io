@@ -2,15 +2,26 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Weather App</title>
-  <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,700,400' rel='stylesheet' type='text/css'>
-  <!-- <link href="style.css" rel="stylesheet" type="text/css"> -->
+  <title>Puzzle Sat encoding</title>
   <meta name="viewport" content="width=device-width">
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script> -->
+  <style media="screen">
+  html, body{
+    margin: 0;
+    padding: 0;
+  }
+  table{
+    width: 291px;
+    margin: 20px auto;
+  }
+  table, td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+  }
+  th, td {
+      padding: 5px;
+  }
+  </style>
 </head>
 <body>
 <div id="container">
@@ -87,10 +98,10 @@ Table.prototype.toString = function () {
     }
     table.appendChild(tbody);
   }
-  // document.getElementById('container').appendChild(table);
-  table.setAttribute('border', 'solid');
-  table.setAttribute('style', 'width: 230px; border: 1px solid black; border-collapse: collapse;');
   return table;
+  // document.getElementById('container').appendChild(table);
+  // table.setAttribute('border', 'solid');
+  // table.setAttribute('style', 'width: 230px; border: 1px solid black; border-collapse: collapse; text-align: center;');
 };
 
 var world = new Table(PUZZLE);
