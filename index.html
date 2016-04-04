@@ -145,14 +145,16 @@ function CNF(grid) {
         var itnhat, nhieunhat;
 
         if(grid.get(vector)>0){
-          nhieunhat = nhieuNhat(temp, grid.get(vector)+1);
+          nhieunhat = toHopChapK(temp.map(function (val) {
+            return 0-val;
+          }), grid.get(vector)+1);
         }else{
           nhieunhat = temp.map(function(e) {
             return 0-e;
           });
         }
         if(grid.get(vector)<temp.length){
-          itnhat = itNhat(temp, temp.length-grid.get(vector)+1);
+          itnhat = toHopChapK(temp, temp.length-grid.get(vector)+1);
         }else{
           itnhat = temp;
         }
@@ -189,14 +191,14 @@ function arrGanDo(grid, vector) {
   return arr;
 }
 
-function itNhat(arr, k) {
+function toHopChapK(arr, k) {
   if(k<=1)
     return arr.map(function(cur) { return [cur]; });
 
   var tempArr = [];
   var temp = [];
   for(let i=0; i <= arr.length-k; i++){
-    temp = itNhat(arr.slice(i+1, arr.length), k-1);
+    temp = toHopChapK(arr.slice(i+1, arr.length), k-1);
     temp.map(function (cur) {
         return cur.unshift(arr[i]);
     });
@@ -205,24 +207,24 @@ function itNhat(arr, k) {
   return tempArr;
 }
 
-function nhieuNhat(arr, k){
-  if(k<=1)
-    return arr.map(function(cur) { return [cur]; });
-
-  var tempArr = [];
-  var temp = [];
-  arr = arr.map(function (e) {
-    return 0-e;
-  })
-  for(let i=0; i <= arr.length-k; i++){
-    temp = itNhat(arr.slice(i+1, arr.length), k-1);
-    temp.map(function (cur) {
-        return cur.unshift(arr[i]);
-    });
-    tempArr = tempArr.concat(temp);
-  }
-  return tempArr;
-}
+// function nhieuNhat(arr, k){
+//   if(k<=1)
+//     return arr.map(function(cur) { return [cur]; });
+//
+//   var tempArr = [];
+//   var temp = [];
+//   arr = arr.map(function (e) {
+//     return 0-e;
+//   })
+//   for(let i=0; i <= arr.length-k; i++){
+//     temp = toHopChapK(arr.slice(i+1, arr.length), k-1);
+//     temp.map(function (cur) {
+//         return cur.unshift(arr[i]);
+//     });
+//     tempArr = tempArr.concat(temp);
+//   }
+//   return tempArr;
+// }
 // --------------------------------------------
 
 
@@ -241,13 +243,11 @@ function kToN(k, n) {
   return arr;
 }
 var myarr = kToN(0, 4);
-console.log(itNhat(myarr, 2));
+console.log(toHopChapK(myarr, 2));
 // myarr = arrGanDo(table.grid, new Vector(0, 0));
 // console.log(myarr);
 // var test = taoCNF(table.grid, new Vector(9, 0));
-// console.log(itNhat(test, 2));
-var cnf = CNF(table.grid);
-
+// console.log(toHopChapK(test, 2));
 function toOneArray(cnf) {
   var arr = [];
   for(let i=0; i<cnf.length;i++){
@@ -257,10 +257,15 @@ function toOneArray(cnf) {
   return arr;
 }
 
+
+var cnf = CNF(table.grid);
 var temp = toOneArray(cnf);
 var string = '';
 for(let i=0;i<temp.length; i++){
-  string+=temp[i]+' 0\n';
+    if(typeof temp[i]==='number')
+      string+=temp[i]+' 0\n';
+    else
+      string+=temp[i].join(' ')+' 0\n';
 }
 console.log(string);
 console.log(temp.length);
