@@ -145,19 +145,19 @@ function CNF(grid) {
         var itnhat, nhieunhat;
 
         if(grid.get(vector)>0){
-          itnhat = nhieuNhat(temp, grid.get(vector)+1);
+          nhieunhat = nhieuNhat(temp, grid.get(vector)+1);
         }else{
-          itnhat = temp.map(function(e) {
+          nhieunhat = temp.map(function(e) {
             return 0-e;
           });
         }
         if(grid.get(vector)<temp.length){
-          nhieunhat = itNhat(temp, temp.length-grid.get(vector)+1);
+          itnhat = itNhat(temp, temp.length-grid.get(vector)+1);
         }else{
-          nhieunhat = temp;
+          itnhat = temp;
         }
-        arraySlove.push(itnhat);
         arraySlove.push(nhieunhat);
+        arraySlove.push(itnhat);
       }
     }
   }
