@@ -29,7 +29,7 @@
 <button type="button" name="button" onclick="Slove()">slove</button>
 <script type="text/javascript">
 'use strict';
-var PUZZLE = [
+const PUZZLE = [
   ".23..0....",
   "....3.2..6",
   "..5.53.574",
@@ -42,7 +42,6 @@ var PUZZLE = [
   ".44....4.."
 ];
 
-// ---------------------start creat table--------------------------
 function Vector(x, y) {
   this.x = x;
   this.y = y;
@@ -65,11 +64,54 @@ Grid.prototype.get = function (vector) {
 Grid.prototype.set = function (vector, value) {
   this.space[vector.x + this.width * vector.y] = value;
 };
+Grid.prototype.vectorToNumber = function (vector) {
+	return vector.x + vector.y * this.width + 1;
+};
+Grid.prototype.arrNumberGanDo = function(vector) {
+	return this.arrVectorGanDo(vector).map(function (e) {	return this.vectorToNumber(e);	}, this);
+};
+Grid.prototype.arrVectorGanDo = function(vector) {
+  var arr = [];
+  var temp;
+  for(let y = -1; y <= 1; y++){
+    for(let x = -1; x <= 1; x++){
+      temp = new Vector(vector.x + x, vector.y + y);
+      if(this.isInside(temp))
+        arr.push(temp);
+    }
+  }
+  return arr;
+};
+Grid.prototype.CNF = function() {
+  var arrCNF = [];
+  for(let y = 0; y < this.height; y++){
+    for(let x = 0; x < this.width; x++){
+      var vector = new Vector(x, y);
+      if(typeof this.get(new Vector(x, y)) === 'number'){
+        var temp = this.arrNumberGanDo(vector);
+        var itnhat, nhieunhat;
+
+        nhieunhat = toHopChapK(temp.map(function (val) { return 0-val; }), this.get(vector) + 1);
+        itnhat = toHopChapK(temp, temp.length - this.get(vector) + 1);
+
+        arrCNF.push(nhieunhat);
+        arrCNF.push(itnhat);
+      }
+    }
+  }
+  return arrCNF;
+};
 
 function elementFromChar(ch) {
   if(ch === ".")
     return null;
   return parseInt(ch);
+}
+
+function charFromElement(element) {
+  if(element === null)
+    return " ";
+  return element;
 }
 
 function Table(map) {
@@ -80,17 +122,11 @@ function Table(map) {
     }
   }, this);
 }
-
-function charFromElement(element) {
-  if(element === null)
-    return " ";
-  return element;
-}
 Table.prototype.toString = function () {
   var table = document.createElement('table');
   table.setAttribute('id', 'tablePuzzle')
 
-  for(let y = 0; y < this.grid.height; y++){
+  for(let y = 0; y < this.grid.height; y++) {
     var tbody = document.createElement('tr');
 
     for (let x = 0; x < this.grid.width; x++) {
@@ -103,172 +139,49 @@ Table.prototype.toString = function () {
     table.appendChild(tbody);
   }
   return table;
-  // document.getElementById('container').appendChild(table);
-  // table.setAttribute('border', 'solid');
-  // table.setAttribute('style', 'width: 230px; border: 1px solid black; border-collapse: collapse; text-align: center;');
 };
-// Table.prototype.numberToVector = function (number) {
-//   return new Vector((number-1)%this.grid.width, Math.floor((number-1)/this.grid.height));
-// };
-// Table.prototype.vectorToNumber = function (vector) {
-//   return vector.x + vector.y*this.grid.width + 1;
-// };
 
-var table = new Table(PUZZLE);
-document.getElementById('container').appendChild(table.toString());
-
-//-------------------------end create table-----------------------
-
-function numberToVector(grid, number) {
-  return new Vector((number-1)%grid.width, Math.floor((number-1)/grid.width));
-}
-
-function vectorToNumber(grid, vector) {
-  return vector.x + vector.y*grid.width + 1;
-}
-
-function Slove() {
-  console.log('clicked');
-  // document.getElementById('container').replaceChild(table.toString(), document.getElementById('tablePuzzle'));
-  // console.log(table.grid.width);
-  CNF(table.grid);
-  // console.log(numbertoVector(100));
-}
-
-function CNF(grid) {
-  var arraySlove = [];
-  for(let y = 0; y < grid.height; y++){
-    for(let x = 0; x < grid.width; x++){
-      var vector = new Vector(x, y);
-      if(typeof grid.get(new Vector(x, y)) === 'number'){
-        var temp = taoCNF(grid, vector);
-        var itnhat, nhieunhat;
-
-        if(grid.get(vector)>0){
-          nhieunhat = toHopChapK(temp.map(function (val) {
-            return 0-val;
-          }), grid.get(vector)+1);
-        }else{
-          nhieunhat = temp.map(function(e) {
-            return 0-e;
-          });
-        }
-        if(grid.get(vector)<temp.length){
-          itnhat = toHopChapK(temp, temp.length-grid.get(vector)+1);
-        }else{
-          itnhat = temp;
-        }
-        arraySlove.push(nhieunhat);
-        arraySlove.push(itnhat);
-      }
-    }
-  }
-  return arraySlove;
-}
-
-function taoCNF(grid, vector) {
-  var gando = arrGanDo(grid, vector);
-  if(grid.isInside(vector)){
-    gando = gando.map(function (e) {
-      return vectorToNumber(grid, e);
-    });
-    return gando;
-  }
-  return null;
-}
-
-function arrGanDo(grid, vector) {
-  var arr = [];
-  var tempVector;
-  for(let y = -1; y<=1; y++){
-    for(let x = -1; x<=1; x++){
-      tempVector = new Vector(vector.x + x, vector.y+y);
-      if(grid.isInside(tempVector)){
-        arr.push(tempVector);
-      }
-    }
-  }
-  return arr;
-}
 
 function toHopChapK(arr, k) {
   if(k<=1)
     return arr.map(function(cur) { return [cur]; });
 
-  var tempArr = [];
+  var toHops = [];
   var temp = [];
-  for(let i=0; i <= arr.length-k; i++){
+  for(let i=0; i <= arr.length - k; i++){
     temp = toHopChapK(arr.slice(i+1, arr.length), k-1);
-    temp.map(function (cur) {
-        return cur.unshift(arr[i]);
+    temp.forEach(function (cur) {
+        cur.unshift(arr[i]);
     });
-    tempArr = tempArr.concat(temp);
+    toHops = toHops.concat(temp);
   }
-  return tempArr;
+  return toHops;
 }
 
-// function nhieuNhat(arr, k){
-//   if(k<=1)
-//     return arr.map(function(cur) { return [cur]; });
-//
-//   var tempArr = [];
-//   var temp = [];
-//   arr = arr.map(function (e) {
-//     return 0-e;
-//   })
-//   for(let i=0; i <= arr.length-k; i++){
-//     temp = toHopChapK(arr.slice(i+1, arr.length), k-1);
-//     temp.map(function (cur) {
-//         return cur.unshift(arr[i]);
-//     });
-//     tempArr = tempArr.concat(temp);
-//   }
-//   return tempArr;
-// }
-// --------------------------------------------
-
-
-
-// var truefalse = {
-// }
-// truefalse[0] = true;
-// truefalse[100] = false;
-// // console.log(truefalse);
-//
-// function kToN(k, n) {
-//   var arr = [];
-// 	for(let i=k; i<n; i++){
-// 		arr.push(i);
-// 	}
-//   return arr;
-// }
-// var myarr = kToN(0, 4);
-// console.log(toHopChapK(myarr, 2));
-// myarr = arrGanDo(table.grid, new Vector(0, 0));
-// console.log(myarr);
-// var test = taoCNF(table.grid, new Vector(9, 0));
-// console.log(toHopChapK(test, 2));
-function toOneArray(cnf) {
+function flatArray(cnf) {
   var arr = [];
-  for(let i=0; i<cnf.length;i++){
-    for(let j=0; j<cnf[i].length; j++)
+  for(let i=0; i < cnf.length; i++){
+    for(let j=0; j < cnf[i].length; j++)
       arr.push(cnf[i][j]);
   }
   return arr;
 }
 
-
-var cnf = CNF(table.grid);
-var temp = toOneArray(cnf);
-var string = '';
-for(let i=0;i<temp.length; i++){
-    if(typeof temp[i]==='number')
-      string+=temp[i]+' 0\n';
-    else
-      string+=temp[i].join(' ')+' 0\n';
+// HTML
+var table = new Table(PUZZLE);
+document.getElementById('container').appendChild(table.toString());
+function Slove() {
+  var cnf = table.grid.CNF();
+	var temp = flatArray(cnf);
+	var string = '';
+	for(let i=0; i < temp.length; i++) {
+	    if(typeof temp[i] === 'number')
+	      string += temp[i] + ' 0\n';
+	    else //Array
+	      string += temp[i].join(' ') + ' 0\n';
+	}
+	console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + temp.length + '\n' + string);
 }
-console.log(string);
-console.log(temp.length);
 </script>
 </body>
 </html>
