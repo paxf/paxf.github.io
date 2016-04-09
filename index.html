@@ -26,7 +26,8 @@
 <body>
 <div id="container">
 </div>
-<button type="button" name="button" onclick="Slove()">slove</button>
+<button type="button" name="button" onclick="solve()">solve</button>
+<script type="text/javascript" src="minisat.js"></script>
 <script type="text/javascript">
 'use strict';
 const PUZZLE = [
@@ -170,7 +171,7 @@ function flatArray(cnf) {
 // HTML
 var table = new Table(PUZZLE);
 document.getElementById('container').appendChild(table.toString());
-function Slove() {
+function mySolve() {
   var cnf = table.grid.CNF();
 	var temp = flatArray(cnf);
 	var string = '';
@@ -180,7 +181,22 @@ function Slove() {
 	    else //Array
 	      string += temp[i].join(' ') + ' 0\n';
 	}
-	console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + temp.length + '\n' + string);
+	// console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + temp.length + '\n' + string);
+	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + temp.length + '\n' + string;
+}
+// -------------------------------------------------
+
+
+function solve() {
+  var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
+	var outputElem = "";
+		var input = mySolve();
+    var startTime = (new Date()).getTime();
+    var result = solve_string(input, input.length);
+    var endTime = (new Date()).getTime();
+    outputElem += result;
+		console.log('CPU time: ' + ((endTime - startTime) / 1000) + 's\n' + outputElem);
+		// console.log(outputElem);
 }
 </script>
 </body>
