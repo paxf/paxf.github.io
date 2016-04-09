@@ -21,6 +21,10 @@
   th, td {
       padding: 5px;
   }
+	.true{
+		background: black;
+		color: white;
+	}
   </style>
 </head>
 <body>
@@ -141,6 +145,26 @@ Table.prototype.toString = function () {
   }
   return table;
 };
+Table.prototype.toStringColors = function (arr) {
+	var table = document.createElement('table');
+  table.setAttribute('id', 'tablePuzzle');
+
+  for(let y = 0; y < this.grid.height; y++) {
+    var tbody = document.createElement('tr');
+
+    for (let x = 0; x < this.grid.width; x++) {
+      var element = this.grid.get(new Vector(x, y));
+      var td = document.createElement('td');
+			if(arr[this.grid.vectorToNumber(new Vector(x, y))] > 0){
+				td.className = "true";
+			}
+      td.innerHTML = charFromElement(element);
+      tbody.appendChild(td);
+    }
+    table.appendChild(tbody);
+  }
+  return table;
+};
 
 
 function toHopChapK(arr, k) {
@@ -188,15 +212,17 @@ function mySolve() {
 
 
 function solve() {
-  var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
+	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
 	var outputElem = "";
-		var input = mySolve();
-    var startTime = (new Date()).getTime();
-    var result = solve_string(input, input.length);
-    var endTime = (new Date()).getTime();
-    outputElem += result;
-		console.log('CPU time: ' + ((endTime - startTime) / 1000) + 's\n' + outputElem);
-		// console.log(outputElem);
+	var input = mySolve();
+	var startTime = (new Date()).getTime();
+	var result = solve_string(input, input.length);
+	var endTime = (new Date()).getTime();
+	outputElem += result;
+	console.log('CPU time: ' + ((endTime - startTime) / 1000) + 's\n' + outputElem);
+	var tableTrueFalse = outputElem.split(" ");
+	// tableTrueFalse.shift();
+	document.getElementById('container').replaceChild(table.toStringColors(tableTrueFalse), document.getElementById('tablePuzzle'));
 }
 </script>
 </body>
