@@ -202,17 +202,18 @@ function encoding() {
 
 
 function solve() {
-	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
-	var outputElem = "";
 	var input = encoding();
+
+	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
 	var startTime = (new Date()).getTime();
 	var result = solve_string(input, input.length);
 	var endTime = (new Date()).getTime();
-	outputElem += result;
-	console.log('CPU time: ' + ((endTime - startTime) / 1000) + 's\n' + outputElem);
-	var tableTrueFalse = outputElem.split(" ");
-	// tableTrueFalse.shift();
-	document.getElementById('container').replaceChild(table.toStringColors(tableTrueFalse), document.getElementById('tablePuzzle'));
+
+	console.log('CPU time: ' + ((endTime - startTime) / 1000) + 's\n' + result);
+	document.getElementById('container').replaceChild(
+			table.toStringColors( result.split(" ")),
+			document.getElementById('tablePuzzle')
+		);
 }
 
 // HTML
