@@ -100,11 +100,11 @@ Grid.prototype.CNF = function() {
         nhieunhat = toHopChapK(temp.map(function (val) { return 0-val; }), this.get(vector) + 1);
         itnhat = toHopChapK(temp, temp.length - this.get(vector) + 1);
 
-        arrCNF.push(nhieunhat);
-        arrCNF.push(itnhat);
+        arrCNF = arrCNF.concat(nhieunhat, itnhat);
       }
     }
   }
+
   return arrCNF;
 };
 
@@ -156,6 +156,8 @@ Table.prototype.toStringColors = function (arr) {
     for (let x = 0; x < this.grid.width; x++) {
       var element = this.grid.get(new Vector(x, y));
       var td = document.createElement('td');
+
+			//bat dau tu arr[1] vi arr[0] === "SAT"
 			if(arr[this.grid.vectorToNumber(new Vector(x, y))] > 0){
 				td.className = "true";
 			}
@@ -184,27 +186,17 @@ function toHopChapK(arr, k) {
   return toHops;
 }
 
-function flatArray(cnf) {
-  var arr = [];
-  for(let i=0; i < cnf.length; i++){
-    for(let j=0; j < cnf[i].length; j++)
-      arr.push(cnf[i][j]);
-  }
-  return arr;
-}
-
 function encoding() {
   var cnf = table.grid.CNF();
-	var temp = flatArray(cnf);
 	var string = '';
-	for(let i=0; i < temp.length; i++) {
-	    if(typeof temp[i] === 'number')
-	      string += temp[i] + ' 0\n';
+	for(let i=0; i < cnf.length; i++) {
+	    if(typeof cnf[i] === 'number')
+	      string += cnf[i] + ' 0\n';
 	    else //Array
-	      string += temp[i].join(' ') + ' 0\n';
+	      string += cnf[i].join(' ') + ' 0\n';
 	}
-	// console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + temp.length + '\n' + string);
-	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + temp.length + '\n' + string;
+	// console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string);
+	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string;
 }
 // -------------------------------------------------
 
