@@ -10,8 +10,7 @@
     padding: 0;
   }
   table{
-    width: 291px;
-    margin: 20px auto;
+    margin: 10px auto 0 auto;
   }
   table, td{
     border: 1px solid black;
@@ -19,7 +18,9 @@
     text-align: center;
   }
   th, td {
-      padding: 5px;
+    padding: 5px;
+		width: 19px;
+		height: 19px;
   }
 	.true{
 		background: black;
@@ -192,10 +193,7 @@ function flatArray(cnf) {
   return arr;
 }
 
-// HTML
-var table = new Table(PUZZLE);
-document.getElementById('container').appendChild(table.toString());
-function mySolve() {
+function encoding() {
   var cnf = table.grid.CNF();
 	var temp = flatArray(cnf);
 	var string = '';
@@ -214,7 +212,7 @@ function mySolve() {
 function solve() {
 	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
 	var outputElem = "";
-	var input = mySolve();
+	var input = encoding();
 	var startTime = (new Date()).getTime();
 	var result = solve_string(input, input.length);
 	var endTime = (new Date()).getTime();
@@ -224,6 +222,10 @@ function solve() {
 	// tableTrueFalse.shift();
 	document.getElementById('container').replaceChild(table.toStringColors(tableTrueFalse), document.getElementById('tablePuzzle'));
 }
+
+// HTML
+var table = new Table(PUZZLE);
+document.getElementById('container').appendChild(table.toString());
 </script>
 </body>
 </html>
