@@ -29,24 +29,37 @@
   </style>
 </head>
 <body>
-<div id="container">
-</div>
+<textarea id="input" type="text" name="name" rows="10">.23..0....
+....3.2..6
+..5.53.574
+.4.5.5.6.3
+..4.5.6..3
+...2.5....
+4.1...11..
+4.1...1.4.
+....6....4
+.44....4..</textarea>
 <button type="button" name="button" onclick="solve()">solve</button>
+<div id="container">
+	<div id="tablePuzzle">
+
+	</div>
+</div>
 <script type="text/javascript" src="minisat.js"></script>
 <script type="text/javascript">
 'use strict';
-const PUZZLE = [
-  ".23..0....",
-  "....3.2..6",
-  "..5.53.574",
-  ".4.5.5.6.3",
-  "..4.5.6..3",
-  "...2.5....",
-  "4.1...11..",
-  "4.1...1.4.",
-  "....6....4",
-  ".44....4.."
-];
+// const PUZZLE = [
+//   ".23..0....",
+//   "....3.2..6",
+//   "..5.53.574",
+//   ".4.5.5.6.3",
+//   "..4.5.6..3",
+//   "...2.5....",
+//   "4.1...11..",
+//   "4.1...1.4.",
+//   "....6....4",
+//   ".44....4.."
+// ];
 
 function Vector(x, y) {
   this.x = x;
@@ -186,7 +199,10 @@ function toHopChapK(arr, k) {
   return toHops;
 }
 
-function encoding() {
+function solve() {
+	const PUZZLE = document.getElementById("input").value.split('\n');
+	console.log(PUZZLE);
+	var table = new Table(PUZZLE);
   var cnf = table.grid.CNF();
 	var string = '';
 	for(let i=0; i < cnf.length; i++) {
@@ -196,13 +212,13 @@ function encoding() {
 	      string += cnf[i].join(' ') + ' 0\n';
 	}
 	// console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string);
-	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string;
-}
-// -------------------------------------------------
-
-
-function solve() {
-	var input = encoding();
+	var input = 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string;
+// }
+// // -------------------------------------------------
+//
+//
+// function solve() {
+	// var input = encoding();
 
 	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
 	var startTime = (new Date()).getTime();
@@ -217,8 +233,8 @@ function solve() {
 }
 
 // HTML
-var table = new Table(PUZZLE);
-document.getElementById('container').appendChild(table.toString());
+// var table = new Table(PUZZLE);
+// document.getElementById('container').appendChild(table.toString());
 </script>
 </body>
 </html>
