@@ -256,28 +256,27 @@ function toHopChapK(arr, k) {
 }
 
 function encoding() {
-  var cnf = table.grid.CNF();
-	var string = cnf.reduce((p, c) => p + c.join(' ') + ' 0\n', '');
-
-	// console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string);
-	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string;
+  var cnfs = table.grid.CNF().reduce((p, c) => p + c.join(' ') + ' 0\n', '');
+	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnfs.length + '\n' + cnfs;
 }
 // -------------------------------------------------
 
 
 function solve() {
   var startTime = (new Date()).getTime();
-	var input = encoding();
+	var cnfs = encoding();
   var endTime = (new Date()).getTime();
 
   console.log('Encoding:', ((endTime - startTime)/1000) + 's');
+// -----------encoding end----------------------
 
   var startTime = (new Date()).getTime();
 	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
-	var result = solve_string(input, input.length);
+	var result = solve_string(cnfs, cnfs.length);
 	var endTime = (new Date()).getTime();
 
 	console.log('Solve: ' + ((endTime - startTime) / 1000) + 's\n' + result);
+  // --------------------solve end-----------------
 
 	document.getElementById('container').replaceChild(
 			table.toStringColors(result.split(" ")),
