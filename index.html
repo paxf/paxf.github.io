@@ -268,7 +268,6 @@ function solve() {
   var endTime = (new Date()).getTime();
 
   console.log('Encoding:', ((endTime - startTime)/1000) + 's');
-// -----------encoding end----------------------
 
   var startTime = (new Date()).getTime();
 	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
@@ -276,7 +275,6 @@ function solve() {
 	var endTime = (new Date()).getTime();
 
 	console.log('Solve: ' + ((endTime - startTime) / 1000) + 's\n' + result);
-  // --------------------solve end-----------------
 
 	document.getElementById('container').replaceChild(
 			table.toStringColors(result.split(" ")),
