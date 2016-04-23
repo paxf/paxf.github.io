@@ -35,17 +35,89 @@
 <script type="text/javascript" src="minisat.js"></script>
 <script type="text/javascript">
 'use strict';
-const PUZZLE = [
-  ".23..0....",
-  "....3.2..6",
-  "..5.53.574",
-  ".4.5.5.6.3",
-  "..4.5.6..3",
-  "...2.5....",
-  "4.1...11..",
-  "4.1...1.4.",
-  "....6....4",
-  ".44....4.."
+// const PUZZLE = [
+//   ".23..0....",
+//   "....3.2..6",
+//   "..5.53.574",
+//   ".4.5.5.6.3",
+//   "..4.5.6..3",
+//   "...2.5....",
+//   "4.1...11..",
+//   "4.1...1.4.",
+//   "....6....4",
+//   ".44....4.."
+// ];
+
+// const PUZZLE =[//21X21
+// 	"...3..331...33.4..34.",
+// 	".6.6.6...566..4....64",
+// 	"..4.4.3.4..4.435..4.3",
+// 	"36......5..33..66...3",
+// 	"35.6453.4.5..535.645.",
+// 	"456...4535.64...5....",
+// 	"..3.34.3...7.53..33.3",
+// 	"4...4..435.765.4.6.5.",
+// 	"2..5..13..7.7.3..3.4.",
+// 	".56....5.9.8.6.5443.4",
+// 	"2.6..52.5.7..6.5...44",
+// 	"...5...5...5..6.222..",
+// 	"..44..3.5.6.45.4..2.3",
+// 	"2.4.4..4.6..5.4.333.2",
+// 	".43.3.33.5.5.3222.23.",
+// 	"4.5.56.3.4.54..4.43.3",
+// 	"..4..5.4..6.233.3.4.4",
+// 	"3..9....3..5..5744..3",
+// 	"..46.536464.3..4..3.1",
+// 	".65...4...3..4433332.",
+// 	".....4.4.532.2.....11"
+// ];
+
+const PUZZLE = [ //55x45
+"..33....4.2....2...2.2..3.54..3..3..3..4.21.21223.33.32",
+"3.5..3..55.53.3.3...3.....6............................",
+"4.4.3..63....6363636332.53.331.1.2.3.3..3...5..3.1.3.42",
+"...3..6.....3.3.3...3...........2.3.3.23.2..7..4.0..332",
+".4...6.3.5.4.........2.3.03..3.32124454....7.3.4..3.4.2",
+"..4.4.....2.1..0..10...3.0.3...321...444..5.53.45....4.",
+"......231...3.....................5..56.6.6...4.66..6.4",
+"3.58.5.2...5.6..6..6..777.7775..25.64334.44.44444.4...2",
+"4..9..1.3...5.6..6..6.6.6..675....9.64.4.4....4..4..443",
+"4.786.1.5.4.4.5...5.55.56.5.7......9.6.4.33.43.23.33.3.",
+"...86.3.5...4.33.3..333333.....5.9..9.766..5.5...5.55..",
+".......54.6........3..33........99.7.777.7778...77.7.74",
+"0..78.5...776.2323232323121..46......66.77.6..6.66...64",
+"...6.6.4..66..3.333.3.3.3.1..4......4.56...............",
+".03.6...53.5.5.4.333.3.3.2.0.2.00..6.5.64.24..2...2..20",
+"01.4...64.3...43.45....3.4.3...3..6.5.565...6...6...52.",
+"......6.4....4.44.3..5..5.3.5554.666...643..6...52.3..0",
+".3.4.65443..6..6.6.6.665....56.6..6.4..65.3.5223..1...2",
+"..6...5.53656.6.6.2..7..6.....5.5.5....64..5.3.3.2..4.2",
+".3..53.3.2.....8...5.5.44.4.24.4.5....56543.4.3.2.3.6.3",
+"..5....3...5.56...24..6667....3.2..323354..3.3.3....5.2",
+"....52422.466..66..5.3.5.55.2.2.3..443.3.33.5.5..465..3",
+".47.6....35...466.2.5......6...4......3.....4.5........",
+"4685.2..35.3.2.....5.2..66..44.5..4.5...4.5..565655.6..",
+"4.6..2..5.3.3.4..42..........56.3...4.4..5.33.3.67..4.4",
+"4.43..465......2.....6...664..6.32345..4.33.23.3.6....4",
+"..4.555.5..21.3.3..47775..66.5424.555.223.4..33..655...",
+"4..54..6452.2.344..5.6665...4..23...65..45.534.4..5.4..",
+"4.4.2225...4.....4..5.4........3...7..3346665564334...6",
+"3...3.3.2....33......4..4302.55.....86534.6656.53....66",
+"..4..544.134.34.....5..4.....5...4....533.76.55.2.44...",
+"..56.66........7..3.5.3.5.335.5.5.6...6.3......3.55.3..",
+"5...34.65.....4.7...5.344..4...3.5.7.86...8.74.2.4.4..4",
+"4.3.4.465.2.6.3.76.4.3.4.23.3.6...57....4..8..4.32.45..",
+"4.44544653....3.6....232.2.2234.3....9....69..3.1.2.6.5",
+".4...4....0.......85.222.23.3..3.2.2...7....8632.1..4..",
+"2.676.55522.2..2.7...2.223..43.13..2..9.....96.12.233..",
+".5.86.4432.3.2.2.697...4333....3.3.2...85..696.3.54.3.4",
+"...8664.4.5.5.44467..7..4...664.3.5..5887..7..6.4.45..4",
+"2...764444.5.7..6.7.8887..787.3..6.5.5.65.5...5...333.3",
+"2..6...5.67..7...5..56...5.6.6.5..444.4..4.4..66.3.3..3",
+".3..87..64...4.3445.5...443..5.4.6...3......4.454...43.",
+"2.3...5555.4433.22.2223.22..2.34.44..4.67..44.5..5565.3",
+".........................................7............2",
+"2..2.233.3.33.3333.3344.33.2.233.3..3..33..4..344.443.."
 ];
 
 function Vector(x, y) {
@@ -74,7 +146,7 @@ Grid.prototype.vectorToNumber = function (vector) {
 	return vector.x + vector.y * this.width + 1;
 };
 Grid.prototype.arrNumberGanDo = function(vector) {
-	return this.arrVectorGanDo(vector).map(function (e) {	return this.vectorToNumber(e);	}, this);
+	return this.arrVectorGanDo(vector).map(e => this.vectorToNumber(e));
 };
 Grid.prototype.arrVectorGanDo = function(vector) {
   var arr = [];
@@ -90,14 +162,15 @@ Grid.prototype.arrVectorGanDo = function(vector) {
 };
 Grid.prototype.CNF = function() {
   var arrCNF = [];
+  var temp, itnhat, nhieunhat;
+
   for(let y = 0; y < this.height; y++){
     for(let x = 0; x < this.width; x++){
-      var vector = new Vector(x, y);
-      if(typeof this.get(new Vector(x, y)) === 'number'){
-        var temp = this.arrNumberGanDo(vector);
-        var itnhat, nhieunhat;
+      let vector = new Vector(x, y);
+      if(typeof this.get(vector) === 'number'){
+        temp = this.arrNumberGanDo(vector);
 
-        nhieunhat = toHopChapK(temp.map(function (val) { return 0-val; }), this.get(vector) + 1);
+        nhieunhat = toHopChapK(temp.map(val => 0-val), this.get(vector) + 1);
         itnhat = toHopChapK(temp, temp.length - this.get(vector) + 1);
 
         arrCNF = arrCNF.concat(nhieunhat, itnhat);
@@ -122,11 +195,11 @@ function charFromElement(element) {
 
 function Table(map) {
   this.grid = new Grid(map[0].length, map.length);
-  map.forEach(function (line, y) {
+  map.forEach((line, y) => {
     for (let x = 0; x < line.length; x++) {
       this.grid.set(new Vector(x, y), elementFromChar(line[x]));
     }
-  }, this);
+  });
 }
 Table.prototype.toString = function () {
   var table = document.createElement('table');
@@ -171,16 +244,12 @@ Table.prototype.toStringColors = function (arr) {
 
 
 function toHopChapK(arr, k) {
-  if(k<=1)
-    return arr.map(function(cur) { return [cur]; });
+  if(k<=1) return arr.map(cur => [cur]);
 
   var toHops = [];
-  var temp = [];
-  for(let i=0; i <= arr.length - k; i++){
+  for(let i=0, temp; i <= arr.length - k; i++){
     temp = toHopChapK(arr.slice(i+1, arr.length), k-1);
-    temp.forEach(function (cur) {
-        cur.unshift(arr[i]);
-    });
+    temp.forEach(cur => {cur.unshift(arr[i])});
     toHops = toHops.concat(temp);
   }
   return toHops;
@@ -188,13 +257,8 @@ function toHopChapK(arr, k) {
 
 function encoding() {
   var cnf = table.grid.CNF();
-	var string = '';
-	for(let i=0; i < cnf.length; i++) {
-	    if(typeof cnf[i] === 'number')
-	      string += cnf[i] + ' 0\n';
-	    else //Array
-	      string += cnf[i].join(' ') + ' 0\n';
-	}
+	var string = cnf.reduce((p, c) => p + c.join(' ') + ' 0\n', '');
+
 	// console.log('p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string);
 	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n' + string;
 }
@@ -202,16 +266,21 @@ function encoding() {
 
 
 function solve() {
+  var startTime = (new Date()).getTime();
 	var input = encoding();
+  var endTime = (new Date()).getTime();
 
+  console.log('Encoding:', ((endTime - startTime)/1000) + 's');
+
+  var startTime = (new Date()).getTime();
 	var solve_string = Module.cwrap('solve_string', 'string', ['string', 'int']);
-	var startTime = (new Date()).getTime();
 	var result = solve_string(input, input.length);
 	var endTime = (new Date()).getTime();
 
-	console.log('CPU time: ' + ((endTime - startTime) / 1000) + 's\n' + result);
+	console.log('Solve: ' + ((endTime - startTime) / 1000) + 's\n' + result);
+
 	document.getElementById('container').replaceChild(
-			table.toStringColors( result.split(" ")),
+			table.toStringColors(result.split(" ")),
 			document.getElementById('tablePuzzle')
 		);
 }
