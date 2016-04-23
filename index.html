@@ -26,7 +26,7 @@ email: paxfgf@gmail.com
 		width: 19px;
 		height: 19px;
   }
-	.true{
+	.black{
 		background: black;
 		color: white;
 	}
@@ -39,42 +39,42 @@ email: paxfgf@gmail.com
 <script type="text/javascript" src="minisat.js"></script>
 <script type="text/javascript">
 'use strict';
-// const PUZZLE = [
-//   ".23..0....",
-//   "....3.2..6",
-//   "..5.53.574",
-//   ".4.5.5.6.3",
-//   "..4.5.6..3",
-//   "...2.5....",
-//   "4.1...11..",
-//   "4.1...1.4.",
-//   "....6....4",
-//   ".44....4.."
-// ];
-
-const PUZZLE =[//21X21
-	"...3..331...33.4..34.",
-	".6.6.6...566..4....64",
-	"..4.4.3.4..4.435..4.3",
-	"36......5..33..66...3",
-	"35.6453.4.5..535.645.",
-	"456...4535.64...5....",
-	"..3.34.3...7.53..33.3",
-	"4...4..435.765.4.6.5.",
-	"2..5..13..7.7.3..3.4.",
-	".56....5.9.8.6.5443.4",
-	"2.6..52.5.7..6.5...44",
-	"...5...5...5..6.222..",
-	"..44..3.5.6.45.4..2.3",
-	"2.4.4..4.6..5.4.333.2",
-	".43.3.33.5.5.3222.23.",
-	"4.5.56.3.4.54..4.43.3",
-	"..4..5.4..6.233.3.4.4",
-	"3..9....3..5..5744..3",
-	"..46.536464.3..4..3.1",
-	".65...4...3..4433332.",
-	".....4.4.532.2.....11"
+const PUZZLE = [
+  ".23..0....",
+  "....3.2..6",
+  "..5.53.574",
+  ".4.5.5.6.3",
+  "..4.5.6..3",
+  "...2.5....",
+  "4.1...11..",
+  "4.1...1.4.",
+  "....6....4",
+  ".44....4.."
 ];
+
+// const PUZZLE =[//21X21
+// 	"...3..331...33.4..34.",
+// 	".6.6.6...566..4....64",
+// 	"..4.4.3.4..4.435..4.3",
+// 	"36......5..33..66...3",
+// 	"35.6453.4.5..535.645.",
+// 	"456...4535.64...5....",
+// 	"..3.34.3...7.53..33.3",
+// 	"4...4..435.765.4.6.5.",
+// 	"2..5..13..7.7.3..3.4.",
+// 	".56....5.9.8.6.5443.4",
+// 	"2.6..52.5.7..6.5...44",
+// 	"...5...5...5..6.222..",
+// 	"..44..3.5.6.45.4..2.3",
+// 	"2.4.4..4.6..5.4.333.2",
+// 	".43.3.33.5.5.3222.23.",
+// 	"4.5.56.3.4.54..4.43.3",
+// 	"..4..5.4..6.233.3.4.4",
+// 	"3..9....3..5..5744..3",
+// 	"..46.536464.3..4..3.1",
+// 	".65...4...3..4433332.",
+// 	".....4.4.532.2.....11"
+// ];
 
 // const PUZZLE = [ //55x45
 // "..33....4.2....2...2.2..3.54..3..3..3..4.21.21223.33.32",
@@ -154,8 +154,7 @@ Grid.prototype.arrNumberGanDo = function(vector) {
 };
 Grid.prototype.arrVectorGanDo = function(vector) {
   var arr = [];
-  var temp;
-  for(let y = -1; y <= 1; y++){
+  for(let y = -1, temp; y <= 1; y++){
     for(let x = -1; x <= 1; x++){
       temp = new Vector(vector.x + x, vector.y + y);
       if(this.isInside(temp))
@@ -166,15 +165,14 @@ Grid.prototype.arrVectorGanDo = function(vector) {
 };
 Grid.prototype.CNF = function() {
   var arrCNF = [];
-  var temp, itnhat, nhieunhat;
 
-  for(let y = 0; y < this.height; y++){
+  for(let y = 0, temp, itnhat, nhieunhat; y < this.height; y++){
     for(let x = 0; x < this.width; x++){
-      let vector = new Vector(x, y);
+      var vector = new Vector(x, y);
+
       if(typeof this.get(vector) === 'number'){
         temp = this.arrNumberGanDo(vector);
-
-        nhieunhat = toHopChapK(temp.map(val => 0-val), this.get(vector) + 1);
+        nhieunhat = toHopChapK(temp.map(val => 0 - val), this.get(vector) + 1);
         itnhat = toHopChapK(temp, temp.length - this.get(vector) + 1);
 
         arrCNF = arrCNF.concat(nhieunhat, itnhat);
@@ -213,10 +211,9 @@ Table.prototype.toString = function () {
     var tbody = document.createElement('tr');
 
     for (let x = 0; x < this.grid.width; x++) {
-      var element = this.grid.get(new Vector(x, y));
       var td = document.createElement('td');
 
-      td.innerHTML = charFromElement(element);
+      td.innerHTML = charFromElement(this.grid.get(new Vector(x, y)));
       tbody.appendChild(td);
     }
     table.appendChild(tbody);
@@ -231,14 +228,14 @@ Table.prototype.toStringColors = function (arr) {
     var tbody = document.createElement('tr');
 
     for (let x = 0; x < this.grid.width; x++) {
-      var element = this.grid.get(new Vector(x, y));
+      var vector = new Vector(x, y);
       var td = document.createElement('td');
 
 			//bat dau tu arr[1] vi arr[0] === "SAT"
-			if(arr[this.grid.vectorToNumber(new Vector(x, y))] > 0){
-				td.className = "true";
+			if(arr[this.grid.vectorToNumber(vector)] > 0){
+				td.className = "black";
 			}
-      td.innerHTML = charFromElement(element);
+      td.innerHTML = charFromElement(this.grid.get(vector));
       tbody.appendChild(td);
     }
     table.appendChild(tbody);
@@ -260,11 +257,12 @@ function toHopChapK(arr, k) {
 }
 
 function encoding() {
-  var cnfs = table.grid.CNF().reduce((p, c) => p + c.join(' ') + ' 0\n', '');
-	return 'p cnf ' + table.grid.width * table.grid.height + ' ' + cnfs.length + '\n' + cnfs;
+  var cnf = table.grid.CNF();
+	return (
+    'p cnf ' + table.grid.width * table.grid.height + ' ' + cnf.length + '\n'
+    + cnf.reduce((p, c) => p + c.join(' ') + ' 0\n', '')
+  );
 }
-// -------------------------------------------------
-
 
 function solve() {
   var startTime = (new Date()).getTime();
